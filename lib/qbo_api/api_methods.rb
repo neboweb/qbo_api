@@ -66,6 +66,31 @@ class QboApi
       payload = set_deactivate(entity, id)
       request(:post, entity: entity, path: entity_path(entity), payload: payload)
     end
+    
+    # https://developer.intuit.com/docs/api/accounting/invoice
+    # Get an invoice as PDF
+    # Operation:
+    #
+    #   GET /v3/company/<realmID>/invoice/<invoiceId>/pdf
+    #   Content type: application/pdf
+    #
+    # This resource returns the specified object in the response body as
+    # an Adobe Portable Document Format (PDF) file. The resulting PDF file is
+    # formatted according to custom form styles in the company settings.
+    #    %PDF-1.4
+    #    ...
+    #    %%EOF
+    def get_invoice_pdf(invoice_id)
+      headers = { 'Content-Type' => 'application/pdf', 'Accept' => 'application/pdf' }
+      connection = build_connection(@endpoint_url, headers: headers) do |conn|
+        add_exception_middleware(conn)
+        add_authorization_middleware(conn)
+        add_connection_adapter(conn)
+      end
+      path = "#{entity_path(:invoice)}/#{invoice_id}/pdf"
+      raw_response = raw_request(:get, conn: connection, path: path)
+      raw_response.body
+    end
 
     private
 
