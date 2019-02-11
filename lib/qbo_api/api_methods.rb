@@ -101,7 +101,7 @@ class QboApi
         add_connection_adapter(conn)
       end
       path = "#{entity_path(:invoice)}/#{invoice_id}/send"
-      raw_response = raw_request(:get, conn: connection, path: path)
+      raw_response = raw_request(:post, conn: connection, path: path)
       raw_response.body
     end
 
