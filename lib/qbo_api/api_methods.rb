@@ -94,8 +94,15 @@ class QboApi
 
     # https://developer.intuit.com/app/developer/qbo/docs/api/accounting/most-commonly-used/invoice#send-an-invoice
     def send_invoice(invoice_id)
+      headers = { 'Content-Type' => 'application/octet-stream' }
+      connection = build_connection(@endpoint_url, headers: headers) do |conn|
+        add_exception_middleware(conn)
+        add_authorization_middleware(conn)
+        add_connection_adapter(conn)
+      end
       path = "#{entity_path(:invoice)}/#{invoice_id}/send"
-      request(:post, entity: :invoice, path: path, payload: nil, params: nil)
+      raw_response = raw_request(:get, conn: connection, path: path)
+      raw_response.body
     end
 
     private
