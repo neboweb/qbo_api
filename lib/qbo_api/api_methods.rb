@@ -92,6 +92,12 @@ class QboApi
       raw_response.body
     end
 
+    # https://developer.intuit.com/app/developer/qbo/docs/api/accounting/most-commonly-used/invoice#send-an-invoice
+    def send_invoice(invoice_id)
+      path = "#{entity_path(:invoice)}/#{invoice_id}/send"
+      request(:post, entity: entity, path: path, payload: nil, params: nil)
+    end
+
     private
 
     def get_query_str(entity, query_filter_args)
